@@ -7,6 +7,7 @@ namespace WebApplicationUF.Repositories
 {
     public class EstadoRepository: IEstadoRepository
     {
+        // Campo privado que guarda os estados em memória
         private readonly List<EstadoModel> _estados;
         public EstadoRepository()
         {
@@ -42,18 +43,44 @@ namespace WebApplicationUF.Repositories
 
             };
         }
-        public List<EstadoModel> ObterTodos()
+        public List<EstadoModel> GetAll()
         {
             return _estados;
         }
-        public EstadoModel? ObterPorSigla(string sigla)
+
+        public bool EstadoExists(string sigla)
         {
-            return _estados.FirstOrDefault(e => e.Sigla.Equals(sigla, StringComparison.OrdinalIgnoreCase));
+            for(int i = 0; i < _estados.Count; i++)
+            {
+                if (_estados[i].Sigla.Equals(sigla, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public EstadoModel? GetBySigla(string sigla)
+        {
+            for(int i = 0; i < _estados.Count; i++)
+            {
+                if (_estados[i].Sigla.Equals(sigla, StringComparison.OrdinalIgnoreCase))
+                {
+                    return _estados[i];
+                }
+            }
+            return null;
 
         }
-        public EstadoModel? ObterEstadoPorNome(string nome)
+        public EstadoModel? GetByName(string nome)
         {
-            return _estados.FirstOrDefault(e => e.Nome.Equals(nome, StringComparison.OrdinalIgnoreCase));
+            for(int i = 0; i < _estados.Count; i++)
+            {
+                if (_estados[i].Nome.Equals(nome, StringComparison.OrdinalIgnoreCase))
+                {
+                    return _estados[i];
+                }
+            }
+            return null;
         }
     }
 }

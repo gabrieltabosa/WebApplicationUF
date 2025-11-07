@@ -2,9 +2,9 @@
 {
     public interface IEstadoRepository
     {
-        List<Models.EstadoModel> ObterTodos();
-        Models.EstadoModel? ObterPorSigla(string sigla);
-        Models.EstadoModel? ObterEstadoPorNome(string nome);
-
+        List<Models.EstadoModel> GetAll();
+        Models.EstadoModel? GetBySigla(string sigla);
+        Models.EstadoModel? GetByName(string nome);
+        bool EstadoExists(string sigla);
     }
 }

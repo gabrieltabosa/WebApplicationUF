@@ -1,7 +1,44 @@
-﻿namespace WebApplicationUF.Controllers
+﻿using Microsoft.AspNetCore.Mvc;
+using WebApplicationUF.Services;
+namespace WebApplicationUF.Controllers
 {
-    public class EstadoController
+    // Indica ao ASP.NET Core que esta classe é um controller de API.
+    // Isso ativa comportamentos úteis como validação automática de modelos.
+    [ApiController]
+    [Route("api/[controller]")]
+    public class EstadoController: ControllerBase
     {
 
+        // Serviço injetado para acessar dados de estados
+        private readonly IEstadoService _service;
+
+        // Construtor com injeção de dependência
+        public EstadoController(IEstadoService service)
+        {
+            _service = service;
+        }
+
+        // GET api/estados
+        // Retorna a lista completa de estados (200 OK + JSON)
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var estados = _service.GetAll();
+            return Ok(estados);
+        }
+
+        // GET api/estados/{sigla}
+        [HttpGet("{sigla}")]
+        public IActionResult EstadoExists(string sigla)
+        {
+                
+            if (sigla == null || sigla.Length != 2)
+            {
+                return BadRequest("A sigla deve conter exatamente 2 caracteres.");
+            }
+            bool existe = _service.EstadoExists(sigla);
+            return Ok(existe);
+        }
+        
     }
 }

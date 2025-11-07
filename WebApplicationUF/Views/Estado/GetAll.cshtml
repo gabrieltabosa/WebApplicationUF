@@ -1,0 +1,36 @@
+﻿@* 1. Define o modelo de dados que esta View espera *@
+@model List<WebApplicationUF.Models.EstadoModel>
+
+@{
+    ViewData["Title"] = "Lista de Estados";
+}
+
+<h2 class="text-primary">Lista de Estados Brasileiros</h2>
+<hr />
+
+@* 2. Verifica se a lista de estados tem dados *@
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Sigla</th>
+                <th>Nome do Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @* 3. Itera sobre a coleção de modelos *@
+            @foreach (var estado in Model)
+            {
+                <tr>
+                    <td>@estado.Sigla</td>
+                    <td>@estado.Nome</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-danger">Nenhum estado encontrado no repositório.</p>
+}

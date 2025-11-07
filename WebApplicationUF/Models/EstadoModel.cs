@@ -2,8 +2,8 @@
 {
     public class EstadoModel
     {
-        protected int Id { get; init; }
-        public string Sigla { get; set; }
+        public int Id { get; init; }
+        public string Sigla { get; init; }
         public string Nome { get; init; }
 
         public EstadoModel(int id, string sigla, string nome)
