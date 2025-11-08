@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplicationUF.Services;
+using System.Diagnostics;
 namespace WebApplicationUF.Controllers
 {
     // Indica ao ASP.NET Core que esta classe é um controller de API.
@@ -37,6 +38,7 @@ namespace WebApplicationUF.Controllers
                 return BadRequest("A sigla deve conter exatamente 2 caracteres.");
             }
             bool existe = _service.EstadoExists(sigla);
+            Console.WriteLine("deu certo");
             return Ok(existe);
         }
         
