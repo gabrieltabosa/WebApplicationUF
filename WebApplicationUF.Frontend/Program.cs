@@ -1,7 +1,17 @@
+using WebApplicationUF.Frontend.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Adiciona o HttpClient e injeta o EstadoApiClient
+builder.Services.AddHttpClient<EstadoApiClient>(client =>
+{
+    // Acessa a configuração do appsettings.json
+    var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"];
+    client.BaseAddress = new Uri(apiBaseUrl!);
+});
 
 var app = builder.Build();
 

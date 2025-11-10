@@ -1,21 +1,22 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using WebApplicationUF.Frontend.Models;
+using WebApplicationUF.Core;
+using WebApplicationUF.Frontend.Services;
 
 namespace WebApplicationUF.Frontend.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly EstadoApiClient _apiClient;
+        public HomeController(EstadoApiClient apiClient)
         {
-            _logger = logger;
+            _apiClient = apiClient;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var estados = _apiClient.GetAllAsync().Result;
+            return View(estados);
         }
 
         public IActionResult Privacy()
