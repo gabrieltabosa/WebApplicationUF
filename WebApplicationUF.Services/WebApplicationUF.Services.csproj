@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WebApplicationUF.Core\WebApplicationUF.Core.csproj" />
+    <ProjectReference Include="..\WebApplicationUF.Repositories\WebApplicationUF.Repositories.csproj" />
+  </ItemGroup>
+
+</Project>

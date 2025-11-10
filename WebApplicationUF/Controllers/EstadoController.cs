@@ -41,6 +41,22 @@ namespace WebApplicationUF.Controllers
             Console.WriteLine("deu certo");
             return Ok(existe);
         }
-        
+
+        // GET api/estados/sigla/{sigla}
+        [HttpGet("sigla/{sigla}")]
+        public IActionResult GetBySigla(string sigla)
+        {
+            if (sigla == null || sigla.Length != 2)
+            {
+                return BadRequest("A sigla deve conter exatamente 2 caracteres.");
+            }
+            var estado = _service.GetBySigla(sigla);
+            if (estado == null)
+            {
+                return NotFound();
+            }
+            return Ok(estado);
+        }
+
     }
 }
