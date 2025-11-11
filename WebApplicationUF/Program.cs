@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
-using WebApplicationUF.Repositories;
-using WebApplicationUF.Services;
+﻿
+using WebAppUF.Application;
+using WebAppUF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

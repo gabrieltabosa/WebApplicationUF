@@ -1,7 +1,7 @@
-﻿using WebApplicationUF.Core;
+﻿using WebAppUF.Domain;
 using System.Collections.Generic;
 
-namespace WebApplicationUF.Services
+namespace WebAppUF.Application
 {
     public interface IEstadoService
     {

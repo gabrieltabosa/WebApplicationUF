@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebApplicationUF.Core\WebApplicationUF.Core.csproj" />
+    <ProjectReference Include="..\WebApplicationUF.Core\DominioUF.csproj" />
+    <ProjectReference Include="..\WebApplicationUF.Repositories\InfrastructureUF.csproj" />
   </ItemGroup>
 
 </Project>

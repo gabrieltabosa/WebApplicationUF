@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApplicationUF.Frontend.ViewModel
+namespace WebUF.ViewModel
 
 {
 

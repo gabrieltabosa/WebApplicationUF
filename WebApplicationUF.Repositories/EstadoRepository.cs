@@ -1,9 +1,9 @@
-﻿using WebApplicationUF.Core;
+﻿using WebAppUF.Domain;
 
 
 
 
-namespace WebApplicationUF.Repositories
+namespace WebAppUF.Infrastructure
 {
     public class EstadoRepository: IEstadoRepository
     {

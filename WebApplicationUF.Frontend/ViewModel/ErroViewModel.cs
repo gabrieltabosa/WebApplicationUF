@@ -1,4 +1,4 @@
-﻿namespace WebApplicationUF.Frontend.ViewModel
+﻿namespace WebUF.ViewModel
 
 {
     public class ErrorViewModel

@@ -1,8 +1,9 @@
-﻿using WebApplicationUF.Repositories;
-using System.Collections.Generic;
-using WebApplicationUF.Core;
+﻿
 
-namespace WebApplicationUF.Services
+using WebAppUF.Domain;
+using WebAppUF.Infrastructure;
+
+namespace WebAppUF.Application
 
 {
     public class EstadoService : IEstadoService

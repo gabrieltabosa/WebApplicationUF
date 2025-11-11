@@ -1,12 +1,12 @@
-﻿using WebApplicationUF.Core;
+﻿using WebAppUF.Domain;
 
-namespace WebApplicationUF.Repositories
+namespace WebAppUF.Infrastructure
 {
     public interface IEstadoRepository
     {
-        List<Core.EstadoModel> GetAll();
-        Core.EstadoModel? GetBySigla(string sigla);
-        Core.EstadoModel? GetByName(string nome);
+        List<Domain.EstadoModel> GetAll();
+        Domain.EstadoModel? GetBySigla(string sigla);
+        Domain.EstadoModel? GetByName(string nome);
         bool EstadoExists(string sigla);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace WebApplicationUF.Core
+﻿namespace WebAppUF.Domain
 {
     public class EstadoModel
     {

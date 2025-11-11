@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebApplicationUF.Services;
+using WebAppUF.Application;
 using System.Diagnostics;
-namespace WebApplicationUF.Controllers
+namespace WebApiUF.Controllers
 {
     // Indica ao ASP.NET Core que esta classe é um controller de API.
     // Isso ativa comportamentos úteis como validação automática de modelos.

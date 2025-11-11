@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using WebApplicationUF.Frontend.Services;
-using WebApplicationUF.Frontend.ViewModel;
+using WebUF.Services;
+using WebUF.ViewModel;
 
-namespace WebApplicationUF.Controllers
+namespace WebUF.Controllers
 {
     public class HomeController : Controller
     {
@@ -18,7 +18,19 @@ namespace WebApplicationUF.Controllers
         public async Task<IActionResult> Index()
         {
             var model = await _api.GetAllAsync();
-            Console.WriteLine("HomeController.Index -> total estados: " + (model?.ListaEstados?.Count ?? 0));
+            Console.WriteLine("HomeController.Index -> total estados: " + (model?.Count ?? 0));
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult ConsultaSigla(string sigla)
+        {
+            var model = _api.GetBySiglaAsync(sigla).Result;
+            return View("Index" , model);
+        }
+
+        public IActionResult Verificcar(string sigla) {
+            var model = _api.EstadoExistsAsync(sigla).Result;
             return View(model);
         }
 

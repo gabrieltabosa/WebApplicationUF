@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36623.8
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationUF", "WebApplicationUF\WebApplicationUF.csproj", "{B41AE94F-BBA0-431C-83EB-0D6D7F1FB553}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiUF", "WebApplicationUF\WebApiUF.csproj", "{B41AE94F-BBA0-431C-83EB-0D6D7F1FB553}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationUF.Core", "WebApplicationUF.Core\WebApplicationUF.Core.csproj", "{2DC462A2-7ED3-404F-B838-3F9D24433310}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DominioUF", "WebApplicationUF.Core\DominioUF.csproj", "{2DC462A2-7ED3-404F-B838-3F9D24433310}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationUF.Repositories", "WebApplicationUF.Repositories\WebApplicationUF.Repositories.csproj", "{EBBC01CA-2E8F-4E46-9248-BD9DEDFAE3B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfrastructureUF", "WebApplicationUF.Repositories\InfrastructureUF.csproj", "{EBBC01CA-2E8F-4E46-9248-BD9DEDFAE3B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationUF.Services", "WebApplicationUF.Services\WebApplicationUF.Services.csproj", "{EFFA10A5-D393-4B26-838C-ED335251FB97}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServicoUF", "WebApplicationUF.Services\ServicoUF.csproj", "{EFFA10A5-D393-4B26-838C-ED335251FB97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationUF.Frontend", "WebApplicationUF.Frontend\WebApplicationUF.Frontend.csproj", "{A0CFB44B-9EF4-4F1D-B0E1-00E8A9C5C191}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebUF", "WebApplicationUF.Frontend\WebUF.csproj", "{A0CFB44B-9EF4-4F1D-B0E1-00E8A9C5C191}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
