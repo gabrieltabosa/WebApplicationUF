@@ -1,4 +1,5 @@
-namespace WebApplicationUF.Core
+﻿namespace WebApplicationUF.Frontend.ViewModel
+
 {
     public class ErrorViewModel
     {
@@ -7,3 +8,4 @@ namespace WebApplicationUF.Core
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
     }
 }
+

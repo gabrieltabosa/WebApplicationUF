@@ -1,0 +1,97 @@
+﻿@using WebApplicationUF.Frontend.ViewModel // Importa o namespace do seu ViewModel
+@model EstadoViewModel // Tipagem forte: A View espera o EstadoViewModel
+
+@{
+    ViewData["Title"] = "Estados do Brasil";
+}
+
+<div class="container my-5 text-center">
+    <!-- Cabeçalho da página -->
+    <h2 class="mb-4">Lista de Estados</h2>
+
+    <!-- A lista ul#lista-estados não será mais usada, pois renderizaremos com a tabela -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped mx-auto w-75">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Sigla</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Descrição</th>
+                    <!-- Adicionado Descrição, pois está no ViewModel -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- INÍCIO DA RENDERIZAÇÃO RAZOR -->
+                @if (Model != null && Model.ListaEstados != null)
+                {
+                    @foreach (var estado in Model.ListaEstados)
+                    {
+                        <tr>
+                            <th scope="row">@estado.Id</th>
+                            <td>@estado.Sigla</td>
+                            <td>@estado.Nome</td>
+                            <td>@estado.Descricao</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4">Nenhum estado encontrado ou erro ao carregar dados.</td>
+                    </tr>
+                }
+                <!-- FIM DA RENDERIZAÇÃO RAZOR -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Campo de verificação de sigla (MANTER com JS/AJAX para interação dinâmica) -->
+    <div class="mb-3 w-50 mx-auto">
+        <input type="text" id="siglaInput" class="form-control mb-2" placeholder="Digite a sigla do estado (ex: SP)">
+        <button class="btn btn-primary w-100" onclick="verificarSigla()">Verificar Estado</button>
+        <div id="resultadoVerificacao" class="mt-3"></div>
+    </div>
+
+
+</div>
+
+<!-- O JavaScript para carregar a lista de estados foi REMOVIDO, pois o Razor faz o trabalho -->
+<!-- O JavaScript para a verificação de sigla (AJAX/Fetch) foi MANTIDO, pois é uma ação dinâmica -->
+<script>
+    async function verificarSigla() {
+        const sigla = document.getElementById('siglaInput').value.trim().toUpperCase();
+        const resultado = document.getElementById('resultadoVerificacao');
+
+        // Limpa resultado anterior
+        resultado.innerHTML = "";
+        resultado.innerHTML = `<div class="alert alert-info">Verificando...</div>`;
+
+        try {
+            // Rota ajustada para o padrão ideal que discutimos: /api/estados/exists/{sigla}
+            // OBS: O seu Controller de Backend precisa expor essa rota,
+            // mas o fetch precisa apontar para a ROTA DA API, não para a ROTA DO FRONTEND CONTROLLER
+            const response = await fetch(`/Estado/VerificarExistencia/${encodeURIComponent(sigla)}`);
+
+            if (response.ok) {
+                 // A API de Backend deve retornar apenas true/false no corpo (conforme discutido anteriormente)
+                const existe = await response.json();
+
+                if (existe) {
+                    resultado.innerHTML = `<div class="alert alert-success">✅ Estado com sigla <strong>${sigla}</strong> existe.</div>`;
+                } else {
+                    resultado.innerHTML = `<div class="alert alert-warning">❌ Estado com sigla <strong>${sigla}</strong> não encontrado.</div>`;
+                }
+
+            } else {
+                // Se o backend retornar um BadRequest (400) ou outro erro de validação
+                const msg = await response.text();
+                resultado.innerHTML = `<div class="alert alert-danger">Erro de Validação: ${msg.substring(0, 100)}</div>`;
+            }
+
+        } catch (error) {
+            console.error("Erro na verificação de sigla:", error);
+            resultado.innerHTML = `<div class="alert alert-danger">Erro de comunicação com a API.</div>`;
+        }
+    }
+</script>

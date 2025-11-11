@@ -28,8 +28,8 @@ namespace WebApplicationUF.Controllers
             return Ok(estados);
         }
 
-        // GET api/estados/{sigla}
-        [HttpGet("{sigla}")]
+        // GET api/estado/exists/{sigla}
+        [HttpGet("exists/{sigla}")]
         public IActionResult EstadoExists(string sigla)
         {
                 
@@ -42,7 +42,7 @@ namespace WebApplicationUF.Controllers
             return Ok(existe);
         }
 
-        // GET api/estados/sigla/{sigla}
+        // GET api/estado/sigla/{sigla}
         [HttpGet("sigla/{sigla}")]
         public IActionResult GetBySigla(string sigla)
         {

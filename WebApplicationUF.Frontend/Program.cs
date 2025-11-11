@@ -2,24 +2,41 @@ using WebApplicationUF.Frontend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// 1) MVC (Controllers + Views)
 builder.Services.AddControllersWithViews();
 
-// Adiciona o HttpClient e injeta o EstadoApiClient
+// 2) Typed HttpClient para EstadoApiClient
 builder.Services.AddHttpClient<EstadoApiClient>(client =>
 {
-    // Acessa a configuração do appsettings.json
     var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"];
-    client.BaseAddress = new Uri(apiBaseUrl!);
-});
+    if (string.IsNullOrWhiteSpace(apiBaseUrl))
+    {
+        // log opcional
+        throw new InvalidOperationException("A URL base da API ('ApiSettings:BaseUrl') não está configurada no appsettings.json.");
+    }
+
+    // normaliza trailing slash
+    if (!apiBaseUrl.EndsWith('/')) apiBaseUrl += '/';
+
+    client.BaseAddress = new Uri(apiBaseUrl);
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+    client.Timeout = TimeSpan.FromSeconds(30); // ajuste conforme necessário
+})
+// Ex.: adicionar políticas de retry com Polly (opcional)
+// .AddPolicyHandler(GetRetryPolicy())
+;
+
+// 3) Registre abstrações se desejar desacoplar
+// builder.Services.AddScoped<IEstadoService, EstadoApiClient>();
+builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -28,10 +45,17 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+// Autenticação (se houver) viria aqui: app.UseAuthentication();
 
+app.UseAuthorization(); // movido antes dos Map...
+
+// Mapas de endpoint
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
+
+// Se você estiver usando Razor Pages, mantenha:
+app.MapRazorPages();
 
 app.Run();
