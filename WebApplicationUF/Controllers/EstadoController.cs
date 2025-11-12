@@ -38,7 +38,7 @@ namespace WebApiUF.Controllers
                 return BadRequest("A sigla deve conter exatamente 2 caracteres.");
             }
             bool existe = _service.EstadoExists(sigla);
-            Console.WriteLine("deu certo");
+            
             return Ok(existe);
         }
 

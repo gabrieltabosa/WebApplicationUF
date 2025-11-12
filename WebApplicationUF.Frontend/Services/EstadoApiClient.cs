@@ -14,16 +14,16 @@ namespace WebUF.Services
             _httpClient = httpClient;
             System.Diagnostics.Debug.WriteLine($"HttpClient Base Address: {_httpClient.BaseAddress}");
         }
-        public async Task<List<EstadoViewModel?>> GetAllAsync()
+        public async Task<List<EstadoViewModel?>> Deseralizador(HttpResponseMessage response)
         {
-            var response = await _httpClient.GetAsync("api/Estado");
+            //verifica se retorno uma operaçõa bem sucedidade( 200 a 299)
             if (response.IsSuccessStatusCode)
             {
-                // 1. Lê o conteúdo da resposta como uma string (JSON)
+                // extrai o conteudo JSON puro para uma string de forma assincrona, armazenando num buffer 
                 string jsonContent = await response.Content.ReadAsStringAsync();
 
-                // 2. Deserializa a string JSON para o objeto que contém a lista
-                // (Assumimos que o tipo correto é EstadoListViewModel)
+                // isso permite ignorar diferenças como maiusculo ou minusculo, Exemplo:
+                // Nome: nome = NOME:nome
                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
                 // O método Deserialize<T>() retorna o objeto desserializado
@@ -35,6 +35,11 @@ namespace WebUF.Services
                 string errorDetail = await response.Content.ReadAsStringAsync();
                 throw new Exception($"Erro ao chamar API. Status: {response.StatusCode}. Detalhe: {errorDetail}");
             }
+        }
+        public async Task<List<EstadoViewModel?>> GetAllAsync()
+        {
+            var response = await _httpClient.GetAsync("api/Estado");
+            return await Deseralizador(response);
         }
         public async Task<List<EstadoViewModel?>> GetBySiglaAsync(string sigla)
         {

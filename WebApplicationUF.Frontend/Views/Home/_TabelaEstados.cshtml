@@ -1,0 +1,21 @@
+﻿@using WebUF.ViewModel
+@model List<EstadoViewModel>
+
+@if (Model != null && Model.Any())
+{
+    @foreach (var estado in Model)
+    {
+        <tr>
+            <th scope="row">@estado.Id</th>
+            <td>@estado.Sigla</td>
+            <td>@estado.Nome</td>
+            <td>@estado.Descricao</td>
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td colspan="4">Nenhum estado encontrado ou erro ao carregar dados.</td>
+    </tr>
+}

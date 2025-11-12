@@ -23,36 +23,46 @@
                     <!-- Adicionado Descrição, pois está no ViewModel -->
                 </tr>
             </thead>
-            <tbody>
-                <!-- INÍCIO DA RENDERIZAÇÃO RAZOR -->
-                @if (Model != null)
-                {
-                    @foreach (var estado in Model)
-                    {
-                        <tr>
-                            <th scope="row">@estado.Id</th>
-                            <td>@estado.Sigla</td>
-                            <td>@estado.Nome</td>
-                            <td>@estado.Descricao</td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="4">Nenhum estado encontrado ou erro ao carregar dados.</td>
-                    </tr>
-                }
-                <!-- FIM DA RENDERIZAÇÃO RAZOR -->
+            <tbody id="tabelaCorpo">
+                    @await Html.PartialAsync("_TabelaEstados", Model)
             </tbody>
         </table>
     </div>
     <div class="mb-3 w-50 mx-auto">
             @Html.TextBox("sigla", null, new { @class = "form-control mb-2", placeholder = "Digite a sigla do estado (ex: SP)" })
-        <button class="btn btn-primary w-100"  type="submit">Verificar Estado</button>
+            <button class="btn btn-primary w-100" id="inputSiglaBusca">Verificar Estado</button>
         <div id="resultadoVerificacao" class="mt-3"></div>
     </div>
 }
+<script>
+    $(document).ready(function() {
+        $("#inputSiglaBusca").click(function (event) {
+            event.preventDefault(); // Evita o envio padrão do formulário
+            var sigla = $("input[name='sigla']").val().trim().toUpperCase();
+            if (sigla === "") {
+                $("#resultadoVerificacao").html('<div class="alert alert-warning">Por favor, insira uma sigla.</div>');
+                return;
+            }
+            $.ajax({
+                url: '@Url.Action("ConsultaSigla", "Home")',
+                type: 'POST',
+                data: { sigla: sigla },
+                success: function (data) {
+                    if (data && data.nome) {
+                        $("#resultadoVerificacao").html('<div class="alert alert-success">Estado encontrado: ' + data.nome + ' (' + data.sigla + ')</div>');
+                    } else {
+                        $("#resultadoVerificacao").html('<div class="alert alert-danger">Estado não encontrado para a sigla: ' + sigla + '</div>');
+                    }
+                },
+                error: function () {
+                    $("#resultadoVerificacao").html('<div class="alert alert-danger">Erro ao consultar o estado. Tente novamente.</div>');
+                }
+            });
+        });
+    });
+</script>
+
+
 
 </div>
 
