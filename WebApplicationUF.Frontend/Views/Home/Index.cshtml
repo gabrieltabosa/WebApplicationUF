@@ -1,68 +1,93 @@
 ﻿@using WebUF.ViewModel
-
-@model List<EstadoViewModel> 
+@model List<EstadoViewModel>
 
 @{
     ViewData["Title"] = "Estados do Brasil";
+    // 1. Pega a mensagem de erro do TempData
+    var errorMessage = TempData["ErrorMessage"] as string;
+}
+
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="container mt-3">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Erro ao carregar dados!</strong> @errorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
 }
 
 
 <div class="container my-5 text-center">
 
     @using (Html.BeginForm("ConsultaSigla", "Home", FormMethod.Post))
-{
-    <h2 class="mb-4">Lista de Estados</h2>
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped mx-auto w-75">
-            <thead class="table-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Sigla</th>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Descrição</th>
-                    <!-- Adicionado Descrição, pois está no ViewModel -->
-                </tr>
-            </thead>
-            <tbody id="tabelaCorpo">
+    {
+        <h2 class="mb-4">Lista de Estados</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped mx-auto w-75">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Sigla</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Descrição</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaCorpo">
                     @await Html.PartialAsync("_TabelaEstados", Model)
-            </tbody>
-        </table>
-    </div>
-    <div class="mb-3 w-50 mx-auto">
-            @Html.TextBox("sigla", null, new { @class = "form-control mb-2", placeholder = "Digite a sigla do estado (ex: SP)" })
-            <button class="btn btn-primary w-100" id="inputSiglaBusca">Verificar Estado</button>
-        <div id="resultadoVerificacao" class="mt-3"></div>
-    </div>
-}
+                </tbody>
+            </table>
+        </div>
+        <div class="mb-3 w-50 mx-auto">
+            @* Garantindo que o ID está no input *@
+            @Html.TextBox("sigla", null, new { @class = "form-control mb-2", placeholder = "Digite a sigla do estado (ex: SP)", id = "siglaInput" })
+            @* 3. Adicionado type="button" para evitar submit acidental do formulário *@
+            <button class="btn btn-primary w-100" type="button" id="inputSiglaBusca">Verificar Estado</button>
+            <div id="resultadoVerificacao" class="mt-3"></div>
+        </div>
+    }
+
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        $("#inputSiglaBusca").click(function (event) {
-            event.preventDefault(); // Evita o envio padrão do formulário
-            var sigla = $("input[name='sigla']").val().trim().toUpperCase();
+        // Altera o evento para o clique do botão "Verificar Estado"
+        $("#inputSiglaBusca").click(function(e) {
+            e.preventDefault(); // Evita o submit do formulário (reforçado pelo type="button" acima)
+
+            const sigla = $('#siglaInput').val().trim().toUpperCase();
+            const resultadoDiv = $('#resultadoVerificacao');
+
+            // Limpa resultado anterior
+            resultadoDiv.html("");
+
             if (sigla === "") {
-                $("#resultadoVerificacao").html('<div class="alert alert-warning">Por favor, insira uma sigla.</div>');
+                resultadoDiv.html('<div class="alert alert-warning">Por favor, digite uma sigla.</div>');
                 return;
             }
+
+            // Chamada AJAX com as funções success e error
             $.ajax({
-                url: '@Url.Action("ConsultaSigla", "Home")',
-                type: 'POST',
+                url: '@Url.Action("Verificador", "Home")',
+                method: "POST",
                 data: { sigla: sigla },
-                success: function (data) {
-                    if (data && data.nome) {
-                        $("#resultadoVerificacao").html('<div class="alert alert-success">Estado encontrado: ' + data.nome + ' (' + data.sigla + ')</div>');
-                    } else {
-                        $("#resultadoVerificacao").html('<div class="alert alert-danger">Estado não encontrado para a sigla: ' + sigla + '</div>');
-                    }
+
+                // Em caso de sucesso (status HTTP 200-299)
+                success: function(response) {
+                    // Não faz nada (conforme sua regra)
                 },
-                error: function () {
-                    $("#resultadoVerificacao").html('<div class="alert alert-danger">Erro ao consultar o estado. Tente novamente.</div>');
+
+                // Em caso de erro (status HTTP 4xx, 5xx, ou o BadRequest do Controller)
+                error: function(xhr, status, error) {
+                    // Captura a mensagem de erro do Controller (xhr.responseText)
+                    const errorMessage = xhr.responseText || "Erro desconhecido na verificação do estado.";
+                    resultadoDiv.html(`<div class="alert alert-danger">❌ ${errorMessage}</div>`);
+                    console.error("Erro na requisição:", status, error);
                 }
             });
         });
     });
 </script>
-
-
-
-</div>
-

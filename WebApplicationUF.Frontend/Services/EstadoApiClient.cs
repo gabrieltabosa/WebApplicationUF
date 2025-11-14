@@ -1,66 +1,94 @@
 ﻿using System.Net;
-using System.Net.Http.Json;
-using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
 using WebUF.ViewModel;
+
+
+using System.Net.Http.Json;
+using System.Reflection.Metadata.Ecma335;
+
 
 namespace WebUF.Services
 {
     public class EstadoApiClient
     {
         private readonly HttpClient _httpClient;
+
         public EstadoApiClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
             System.Diagnostics.Debug.WriteLine($"HttpClient Base Address: {_httpClient.BaseAddress}");
         }
-        public async Task<List<EstadoViewModel?>> Deseralizador(HttpResponseMessage response)
+
+        // --------------------------------------------------------------------------
+        // NOVO: Deserializador Genérico
+        // Esta função encapsula a lógica de sucesso, erro e desserialização
+        // para qualquer tipo de dado (TData) retornado pela API.
+        // --------------------------------------------------------------------------
+        private async Task<ApiResponse<TData>> Deseralizador<TData>(HttpResponseMessage response)
         {
-            //verifica se retorno uma operaçõa bem sucedidade( 200 a 299)
+            // 1. Configuração do Serializador
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            string jsonContent = await response.Content.ReadAsStringAsync();
+
+            // 2. Verifica se a operação foi bem-sucedida (Status Code 200-299)
             if (response.IsSuccessStatusCode)
             {
-                // extrai o conteudo JSON puro para uma string de forma assincrona, armazenando num buffer 
-                string jsonContent = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    // Tenta desserializar o conteúdo diretamente para o tipo TData.
+                    // A lógica de forçar a lista/objeto singular (que estava no código original)
+                    // foi simplificada. Se a API retornar uma lista, TData deve ser List<EstadoViewModel>.
+                    // Se a API retornar um bool, TData deve ser bool.
+                    var data = JsonSerializer.Deserialize<TData>(jsonContent, options);
 
-                // isso permite ignorar diferenças como maiusculo ou minusculo, Exemplo:
-                // Nome: nome = NOME:nome
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-
-                // O método Deserialize<T>() retorna o objeto desserializado
-                return JsonSerializer.Deserialize<List<EstadoViewModel>>(jsonContent, options);
+                    // Retorna um ApiResponse de sucesso
+                    return new ApiResponse<TData>(data);
+                }
+                catch (Exception ex)
+                {
+                    // Erro na desserialização do JSON (o JSON recebido não bate com TData)
+                    return new ApiResponse<TData>(
+                        $"Erro de Desserialização (Sucesso HTTP): O conteúdo JSON não pôde ser convertido para {typeof(TData).Name}. Conteúdo: {jsonContent}. Detalhe: {ex.Message}"
+                    );
+                }
             }
-            else
+            else // Status Code de Erro (4xx ou 5xx)
             {
-                // Tratamento de erro aprimorado
-                string errorDetail = await response.Content.ReadAsStringAsync();
-                throw new Exception($"Erro ao chamar API. Status: {response.StatusCode}. Detalhe: {errorDetail}");
+                // Retorna um ApiResponse de erro
+                return new ApiResponse<TData>(
+                    $"Erro ({response.StatusCode}): {jsonContent}"
+                );
             }
         }
-        public async Task<List<EstadoViewModel?>> GetAllAsync()
+
+        // --------------------------------------------------------------------------
+        // REVISADO: Função para obter todos os estados
+        // Usa o novo Deseralizador<List<EstadoViewModel>>
+        // --------------------------------------------------------------------------
+        public async Task<ApiResponse<List<EstadoViewModel>>> GetAllAsync()
         {
             var response = await _httpClient.GetAsync("api/Estado");
-            return await Deseralizador(response);
+            return await Deseralizador<List<EstadoViewModel>>(response);
         }
-        public async Task<List<EstadoViewModel?>> GetBySiglaAsync(string sigla)
-        {
-            var retorno = (await GetAllAsync());
 
-            if (!string.IsNullOrEmpty(sigla))
-                return retorno.Where(a => a.Sigla?.ToLower() == sigla?.ToLower()).ToList();
-            else
-                return retorno?.ToList();
+        // --------------------------------------------------------------------------
+        // REVISADO: Função para obter estado por sigla
+        // Usa o novo Deseralizador<List<EstadoViewModel>>
+        // --------------------------------------------------------------------------
+        public async Task<ApiResponse<List<EstadoViewModel>>> GetBySiglaAsync(string sigla)
+        {
+            var retorno = await _httpClient.GetAsync($"api/Estado/sigla/{WebUtility.UrlEncode(sigla)}");
+            return await Deseralizador<List<EstadoViewModel>>(retorno);
         }
-        public async Task<bool> EstadoExistsAsync(string sigla)
+
+        // --------------------------------------------------------------------------
+        // REVISADO: Função para verificar existência (agora retorna ApiResponse<bool>)
+        // Usa o novo Deseralizador<bool>
+        // --------------------------------------------------------------------------
+        public async Task<ApiResponse<bool>> EstadoExistsAsync(string sigla)
         {
             var response = await _httpClient.GetAsync($"api/Estado/exists/{WebUtility.UrlEncode(sigla)}");
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadFromJsonAsync<bool>();
-            }
-            else
-            {
-                throw new Exception($"Erro ao chamar API: {response.StatusCode}");
-            }
+            return await Deseralizador<bool>(response);
         }
     }
 }
