@@ -35,6 +35,8 @@ namespace WebUF.Services
             {
                 try
                 {
+                    if (typeof(TData) == typeof(List<EstadoViewModel>) && !jsonContent.StartsWith("["))
+                        jsonContent = "[" + jsonContent + "]";
                     // Tenta desserializar o conteúdo diretamente para o tipo TData.
                     // A lógica de forçar a lista/objeto singular (que estava no código original)
                     // foi simplificada. Se a API retornar uma lista, TData deve ser List<EstadoViewModel>.
@@ -46,6 +48,7 @@ namespace WebUF.Services
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine($"Erro na desserialização: {ex.Message}");
                     // Erro na desserialização do JSON (o JSON recebido não bate com TData)
                     return new ApiResponse<TData>(
                         $"Erro de Desserialização (Sucesso HTTP): O conteúdo JSON não pôde ser convertido para {typeof(TData).Name}. Conteúdo: {jsonContent}. Detalhe: {ex.Message}"
@@ -61,33 +64,33 @@ namespace WebUF.Services
             }
         }
 
-        // --------------------------------------------------------------------------
-        // REVISADO: Função para obter todos os estados
-        // Usa o novo Deseralizador<List<EstadoViewModel>>
-        // --------------------------------------------------------------------------
+    
         public async Task<ApiResponse<List<EstadoViewModel>>> GetAllAsync()
         {
             var response = await _httpClient.GetAsync("api/Estado");
             return await Deseralizador<List<EstadoViewModel>>(response);
         }
 
-        // --------------------------------------------------------------------------
-        // REVISADO: Função para obter estado por sigla
-        // Usa o novo Deseralizador<List<EstadoViewModel>>
-        // --------------------------------------------------------------------------
+    
         public async Task<ApiResponse<List<EstadoViewModel>>> GetBySiglaAsync(string sigla)
         {
             var retorno = await _httpClient.GetAsync($"api/Estado/sigla/{WebUtility.UrlEncode(sigla)}");
             return await Deseralizador<List<EstadoViewModel>>(retorno);
         }
 
-        // --------------------------------------------------------------------------
-        // REVISADO: Função para verificar existência (agora retorna ApiResponse<bool>)
-        // Usa o novo Deseralizador<bool>
-        // --------------------------------------------------------------------------
+
         public async Task<ApiResponse<bool>> EstadoExistsAsync(string sigla)
         {
             var response = await _httpClient.GetAsync($"api/Estado/exists/{WebUtility.UrlEncode(sigla)}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return new ApiResponse<bool>
+                {
+                    Data = false
+                };
+            }
+
             return await Deseralizador<bool>(response);
         }
     }

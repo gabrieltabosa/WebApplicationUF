@@ -32,6 +32,7 @@ namespace WebApiUF.Controllers
         [HttpGet("exists/{sigla}")]
         public IActionResult EstadoExists(string sigla)
         {
+            Console.WriteLine($"chamda da sigla para analise {sigla}");
                 
             if (sigla == null || sigla.Length != 2)
             {

@@ -53,41 +53,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function() {
-        // Altera o evento para o clique do botão "Verificar Estado"
-        $("#inputSiglaBusca").click(function(e) {
-            e.preventDefault(); // Evita o submit do formulário (reforçado pelo type="button" acima)
-
-            const sigla = $('#siglaInput').val().trim().toUpperCase();
-            const resultadoDiv = $('#resultadoVerificacao');
-
-            // Limpa resultado anterior
-            resultadoDiv.html("");
-
-            if (sigla === "") {
-                resultadoDiv.html('<div class="alert alert-warning">Por favor, digite uma sigla.</div>');
-                return;
-            }
-
-            // Chamada AJAX com as funções success e error
-            $.ajax({
-                url: '@Url.Action("Verificador", "Home")',
-                method: "POST",
-                data: { sigla: sigla },
-
-                // Em caso de sucesso (status HTTP 200-299)
-                success: function(response) {
-                    // Não faz nada (conforme sua regra)
-                },
-
-                // Em caso de erro (status HTTP 4xx, 5xx, ou o BadRequest do Controller)
-                error: function(xhr, status, error) {
-                    // Captura a mensagem de erro do Controller (xhr.responseText)
-                    const errorMessage = xhr.responseText || "Erro desconhecido na verificação do estado.";
-                    resultadoDiv.html(`<div class="alert alert-danger">❌ ${errorMessage}</div>`);
-                    console.error("Erro na requisição:", status, error);
-                }
-            });
-        });
-    });
+    var urlRaiz = '@Url.Action("", "Home")' + "Home";
 </script>
+
+<script src="~/js/uf.js"></script>
