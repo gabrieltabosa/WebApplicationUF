@@ -32,6 +32,9 @@ namespace WebAppUF.Application
             sigla = sigla.ToUpper();
             return _repository.EstadoExists(sigla);
         }
-
+        public List<EstadoModel> GetByRegiao(string regiao)
+        {
+            return _repository.GetByRegion(regiao);
+        }
     }
 }

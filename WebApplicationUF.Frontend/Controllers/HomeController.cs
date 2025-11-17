@@ -38,16 +38,20 @@ namespace WebUF.Controllers
             // Garante que o método é assíncrono e evita .Result
             var response = await _api.GetBySiglaAsync(sigla);
 
-            
-            
-            // Sucesso: Retorna a View com a lista (de 1 ou mais estados, dependendo da API)
-            return PartialView("_TabelaEstados", response.Data);
-            
+            if (response.Sucesso && response.Data != null)
+            {
+                // Sucesso: Retorna a View com a lista (de 1 ou mais estados, dependendo da API)
+                return View("index", response.Data);
+            }
 
-            
+            // Falha: Armazena a mensagem de erro e retorna para a tela inicial
 
 
-            
+            // Redireciona para o Index (GET) para recarregar a lista completa e mostrar o erro
+            // Se preferir manter na mesma página, use View("Index", new List<EstadoViewModel>())
+            return RedirectToAction("Index");
+
+
         }
 
         // Método chamado via AJAX do JavaScript para verificar a existência da sigla
@@ -55,25 +59,36 @@ namespace WebUF.Controllers
         public async Task<IActionResult> Verificador(string sigla)
         {
             // Renomeei de Verificar para Verificador para bater com o AJAX na View
-            
-            var response = await _api.EstadoExistsAsync(sigla);
-            Console.WriteLine($"Verificador chamado para sigla: {response}");
 
+            var response = await _api.EstadoExistsAsync(sigla);
+            Console.WriteLine(response.Data);
             if (response.Sucesso)
             {
-                // Se o retorno da API for sucesso (200 OK), mas o payload diz false/true
-                Console.WriteLine($"Verificador resultado: {response.Data}");
-                Console.WriteLine($"Verificador erro: {response.Erro}");
                 if (response.Data == true)
-                    return Ok();
+                {
+                    return Ok(); // Opcional, pode retornar algo útil
+                }
                 else
-                    return BadRequest(response.Data);
+                {
+                    // Retorna mensagem diretamente
+                    return BadRequest("Estado não encontrado.");
+                }
             }
             else
-                Console.WriteLine($"Verificador erro: {response.Erro}");
-            return BadRequest(response.Data);
+            {
+                return BadRequest($"Erro: {response.Erro}");
+            }
         }
-
+        [HttpPost]
+        public async Task<IActionResult> buscarRegiao(string regiao)
+        {
+            var response = await _api.GetRegiaoAsync(regiao);
+            
+            // Sucesso: Retorna a View com a lista (de 1 ou mais estados, dependendo da API)
+            return View("index", response.Data);
+            
+            
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

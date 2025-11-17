@@ -7,6 +7,8 @@ namespace WebAppUF.Infrastructure
         List<Domain.EstadoModel> GetAll();
         Domain.EstadoModel? GetBySigla(string sigla);
         Domain.EstadoModel? GetByName(string nome);
+        List<EstadoModel> GetByRegion(string regiao);
+
         bool EstadoExists(string sigla);
     }
 }

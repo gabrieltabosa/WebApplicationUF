@@ -65,14 +65,14 @@ namespace WebUF.Services
             }
         }
 
-    
+
         public async Task<ApiResponse<List<EstadoViewModel>>> GetAllAsync()
         {
             var response = await _httpClient.GetAsync("api/Estado");
             return await Deseralizador<List<EstadoViewModel>>(response);
         }
 
-    
+
         public async Task<ApiResponse<List<EstadoViewModel>>> GetBySiglaAsync(string sigla)
         {
             var retorno = await _httpClient.GetAsync($"api/Estado/sigla/{WebUtility.UrlEncode(sigla)}");
@@ -93,6 +93,12 @@ namespace WebUF.Services
             }
 
             return await Deseralizador<bool>(response);
+        }
+
+        public async Task<ApiResponse<List<EstadoViewModel>>> GetRegiaoAsync(string regiao)
+        {
+            var response = await _httpClient.GetAsync($"api/Estado/regiao/{WebUtility.UrlEncode(regiao)}");
+            return await Deseralizador<List<EstadoViewModel>>(response);
         }
     }
 }

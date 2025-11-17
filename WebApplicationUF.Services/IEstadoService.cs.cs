@@ -12,6 +12,7 @@ namespace WebAppUF.Application
         bool EstadoExists(string sigla);
         EstadoModel? GetBySigla(string sigla);
         EstadoModel? GetByName(string nome);
+        List<EstadoModel> GetByRegiao(string regiao);
 
     }
 }

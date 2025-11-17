@@ -24,14 +24,27 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <li class="nav-item dropdown">
+                            <div class="dropdown">
+                                <button class="btn btn-dark dropdown-toggle" type="button" id="filtroDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Filtro
+                                </button>
+                                <form asp-controller="Home" asp-action="buscarRegiao" method="post" class="dropdown-menu p-0" style="min-width: 12rem;">
+                                    
+                                    <button type="submit" name="regiao" value="" class="dropdown-item">Todos os Estados</button>
+                                    <button type="submit" name="regiao" value="Norte" class="dropdown-item">Região Norte</button>
+                                    <button type="submit" name="regiao" value="Nordeste" class="dropdown-item">Região Nordeste</button>
+                                    <button type="submit" name="regiao" value="Centro-Oeste" class="dropdown-item">Região Centro-Oeste</button>
+                                    <button type="submit" name="regiao" value="Sudeste" class="dropdown-item">Região Sudeste</button>
+                                    <button type="submit" name="regiao" value="Sul" class="dropdown-item">Região Sul</button>
+                                </form>
+                            </div>
                         </li>
                     </ul>
 
                     <form id="formConsultaAjax" action="/Home/ConsultaSigla" method="post" class="d-flex" role="search">
                         <input id="siglaInput" name="sigla" class="form-control me-2" type="search" placeholder="Buscar UF (Ex: SP)" aria-label="Buscar UF" maxlength="2" />
-                        <button class="btn btn-outline-success" type="submit">Buscar</button>
+                        <button id="btnBuscar" class="btn btn-outline-success" type="submit">Buscar</button>
                     </form>
                 </div>
             </div>

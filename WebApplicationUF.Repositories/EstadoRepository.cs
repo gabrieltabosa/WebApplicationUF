@@ -82,5 +82,17 @@ namespace WebAppUF.Infrastructure
             }
             return null;
         }
+        public List<EstadoModel> GetByRegion(string regiao)
+        {
+            List<EstadoModel> estadosRegiao = new List<EstadoModel>();
+            for(int i = 0; i < _estados.Count; i++)
+            {
+                if (_estados[i].Regiao.Equals(regiao, StringComparison.OrdinalIgnoreCase))
+                {
+                    estadosRegiao.Add(_estados[i]);
+                }
+            }
+            return estadosRegiao;
+        }
     }
 }
