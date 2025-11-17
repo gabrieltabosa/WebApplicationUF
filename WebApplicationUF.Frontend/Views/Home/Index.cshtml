@@ -21,7 +21,7 @@
 
 <div class="container my-5 text-center">
 
-    @using (Html.BeginForm("ConsultaSigla", "Home", FormMethod.Post))
+    @using (Html.BeginForm("ConsultaSigla", "Home", FormMethod.Post, new { id = "formConsultaAjax" }))
     {
         <h2 class="mb-4">Lista de Estados</h2>
         <div class="table-responsive">
@@ -31,7 +31,9 @@
                         <th scope="col">#</th>
                         <th scope="col">Sigla</th>
                         <th scope="col">Nome</th>
-                        <th scope="col">Descrição</th>
+                        <th scope="col">Região</th>
+                        <th scope="col">Capital</th>
+                        <th scope="col" class="col-action">Ação</th>
                     </tr>
                 </thead>
                 <tbody id="tabelaCorpo">
@@ -39,13 +41,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="mb-3 w-50 mx-auto">
-            @* Garantindo que o ID está no input *@
-            @Html.TextBox("sigla", null, new { @class = "form-control mb-2", placeholder = "Digite a sigla do estado (ex: SP)", id = "siglaInput" })
-            @* 3. Adicionado type="button" para evitar submit acidental do formulário *@
-            <button class="btn btn-primary w-100" type="button" id="inputSiglaBusca">Verificar Estado</button>
-            <div id="resultadoVerificacao" class="mt-3"></div>
-        </div>
+        
     }
 
 </div>

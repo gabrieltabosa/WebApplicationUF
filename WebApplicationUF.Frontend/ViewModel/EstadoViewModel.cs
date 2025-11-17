@@ -14,6 +14,10 @@ namespace WebUF.ViewModel
         public string Nome { get; set; }
         [Required]
         public string Descricao { get; set; }
+        [Required]
+        public string Regiao { get; set; }
+        [Required]
+        public string Capital { get; set; }
         // Exemplo de lista para preencher um dropdown/grid
         public List<EstadoViewModel> ListaEstados { get; set; }
 

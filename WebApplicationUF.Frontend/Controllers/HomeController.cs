@@ -38,18 +38,16 @@ namespace WebUF.Controllers
             // Garante que o método é assíncrono e evita .Result
             var response = await _api.GetBySiglaAsync(sigla);
 
-            if (response.Sucesso && response.Data != null)
-            {
-                // Sucesso: Retorna a View com a lista (de 1 ou mais estados, dependendo da API)
-                return View("index",response.Data);
-            }
+            
+            
+            // Sucesso: Retorna a View com a lista (de 1 ou mais estados, dependendo da API)
+            return PartialView("_TabelaEstados", response.Data);
+            
 
-            // Falha: Armazena a mensagem de erro e retorna para a tela inicial
+            
 
 
-            // Redireciona para o Index (GET) para recarregar a lista completa e mostrar o erro
-            // Se preferir manter na mesma página, use View("Index", new List<EstadoViewModel>())
-            return RedirectToAction("Index");
+            
         }
 
         // Método chamado via AJAX do JavaScript para verificar a existência da sigla
@@ -65,13 +63,15 @@ namespace WebUF.Controllers
             {
                 // Se o retorno da API for sucesso (200 OK), mas o payload diz false/true
                 Console.WriteLine($"Verificador resultado: {response.Data}");
+                Console.WriteLine($"Verificador erro: {response.Erro}");
                 if (response.Data == true)
                     return Ok();
                 else
                     return BadRequest(response.Data);
             }
             else
-                return BadRequest(response.Data);
+                Console.WriteLine($"Verificador erro: {response.Erro}");
+            return BadRequest(response.Data);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

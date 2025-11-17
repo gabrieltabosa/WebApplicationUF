@@ -42,6 +42,7 @@ namespace WebUF.Services
                     // foi simplificada. Se a API retornar uma lista, TData deve ser List<EstadoViewModel>.
                     // Se a API retornar um bool, TData deve ser bool.
                     var data = JsonSerializer.Deserialize<TData>(jsonContent, options);
+                    Console.WriteLine($"Conteúdo JSON desserializado: {jsonContent}");
 
                     // Retorna um ApiResponse de sucesso
                     return new ApiResponse<TData>(data);
