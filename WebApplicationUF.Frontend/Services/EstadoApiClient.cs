@@ -43,7 +43,7 @@ namespace WebUF.Services
                     // Se a API retornar um bool, TData deve ser bool.
                     var data = JsonSerializer.Deserialize<TData>(jsonContent, options);
                     Console.WriteLine($"Conteúdo JSON desserializado: {jsonContent}");
-
+                    Console.WriteLine($"Tipo de dado esperado: {data}");
                     // Retorna um ApiResponse de sucesso
                     return new ApiResponse<TData>(data);
                 }
@@ -98,6 +98,7 @@ namespace WebUF.Services
         public async Task<ApiResponse<EstadoViewModel>> GetByIdAsync(string id)
         {
             var response = await _httpClient.GetAsync($"api/Estado/{WebUtility.UrlEncode(id)}");
+            Console.WriteLine($"Response formato Code: {response}");
             return await Deseralizador<EstadoViewModel>(response);
         }
 

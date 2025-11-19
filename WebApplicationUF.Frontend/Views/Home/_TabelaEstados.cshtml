@@ -13,9 +13,9 @@
             <td>@estado.Capital</td> <!-- Adicionado: Capital -->
             <td>
                 <button class="btn btn-primary btn-sm"
-                    id=@("btn_model" + "_" + estado.Id)
+                    id="btn_model_@estado.Id"
                     type="button" 
-                    onclick="toggleDescricao(@estado.Id)">
+                    onclick="toggleDescricao('@estado.Id')">
                     Ver descrição
                 </button>
             </td>
@@ -29,5 +29,8 @@ else
         <td colspan="6">Nenhum estado encontrado.</td> <!-- Colspan ajustado para 6 -->
     </tr>
 }
+
+@* Placeholder onde o partial retornado pelo controller será injetado *@
+<div id="modalPlaceholder"></div>
 
 

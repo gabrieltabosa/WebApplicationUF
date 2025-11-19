@@ -1,4 +1,6 @@
 ﻿
+using InfrastructureUF;
+using Microsoft.EntityFrameworkCore;
 using WebAppUF.Application;
 using WebAppUF.Infrastructure;
 
@@ -12,6 +14,11 @@ builder.Services.AddScoped<IEstadoService, EstadoService>();
 builder.Services.AddControllers(); // mais enxuto para APIs
 // Se precisar de Views/Razor, use AddControllersWithViews() em vez disso
 // builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
+
+//toda vez que o AppDbContext for requisitado, cria uma instância usando SQL Server
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer("Server=MEU_SERVIDOR;Database=MINHA_DB;Trusted_Connection=True;TrustServerCertificate=True;"));
 
 // Swagger / OpenAPI
 builder.Services.AddEndpointsApiExplorer();

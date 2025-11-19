@@ -75,15 +75,14 @@ namespace WebApiUF.Controllers
             }
             return Ok(estados);
         }
-        [HttpGet("/{id:int}")]
-        public IActionResult GetById(string response) 
+        [HttpGet("{id:int}")]
+        public IActionResult GetById(int id) 
         {
-            
-            if (string.IsNullOrWhiteSpace(response))
+            if (id <= 0) 
             {
-                return BadRequest("O id esta invalido");
+                return BadRequest("O ID deve ser um número inteiro positivo.");
             }
-            int id = int.Parse(response);
+
             var estado = _service.GetById(id);
             return Ok(estado);
         }
