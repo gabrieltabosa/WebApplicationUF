@@ -12,15 +12,12 @@
             <td>@estado.Regiao</td> <!-- Adicionado: Região -->
             <td>@estado.Capital</td> <!-- Adicionado: Capital -->
             <td>
-                <button class="btn btn-primary btn-sm" type="button" onclick="toggleDescricao(@estado.Id)">
+                <button class="btn btn-primary btn-sm"
+                    id=@("btn_model" + "_" + estado.Id)
+                    type="button" 
+                    onclick="toggleDescricao(@estado.Id)">
                     Ver descrição
                 </button>
-            </td>
-        </tr>
-        <tr id="descricao-@estado.Id" style="display: none;">
-            <!-- Colspan ajustado para 6 (Id + Sigla + Nome + Região + Capital + Botão) -->
-            <td colspan="6" class="bg-light">
-                <strong>Descrição:</strong> @estado.Descricao
             </td>
         </tr>
 
@@ -32,13 +29,5 @@ else
         <td colspan="6">Nenhum estado encontrado.</td> <!-- Colspan ajustado para 6 -->
     </tr>
 }
-<script>
-    function toggleDescricao(estadoId) {
-        var descricaoRow = document.getElementById('descricao-' + estadoId);
-        if (descricaoRow.style.display === 'none') {
-            descricaoRow.style.display = '';
-        } else {
-            descricaoRow.style.display = 'none';
-        }
-    }
-</script>
+
+

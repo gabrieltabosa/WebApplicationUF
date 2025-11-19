@@ -1,4 +1,33 @@
-﻿@page
-@model WebUF.Views.Shared._ModalDescricaoModel
-@{
-}
+﻿@using WebUF.ViewModel
+@model EstadoViewModel
+<div class="modal fade" id="modalDescricaoCompartilhado" tabindex="-1" aria-labelledby="modalDescricaoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDescricaoLabel">Descrição do Estado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <div id="modalLoading" style="display:none; text-align:center; padding:1.5rem;">
+                    Carregando...
+                </div>
+                <div id="descricaoEstadoContainer" style="display:none;">
+                    <dl class="row">
+                        <dt class="col-sm-3">Nome</dt>
+                        <dd class="col-sm-9" id="estadoNome">@Model?.Nome</dd>
+
+                        <dt class="col-sm-3">Sigla</dt>
+                        <dd class="col-sm-9" id="estadoSigla">@Model?.Sigla</dd>
+
+                        <dt class="col-sm-3">Descrição</dt>
+                        <dd class="col-sm-9" id="estadoDescricao">@Model?.Descricao</dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+

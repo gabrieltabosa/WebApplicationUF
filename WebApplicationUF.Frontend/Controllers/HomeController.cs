@@ -89,6 +89,14 @@ namespace WebUF.Controllers
             
             
         }
+        [HttpPost]
+        public async Task<IActionResult> GetById(string id)
+        {
+            
+            var response = await _api.GetByIdAsync(id);
+            Console.WriteLine(response.Data);
+            return PartialView("_ModalDescricao", response);
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

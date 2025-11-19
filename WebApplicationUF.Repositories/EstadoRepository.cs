@@ -94,5 +94,18 @@ namespace WebAppUF.Infrastructure
             }
             return estadosRegiao;
         }
+        public EstadoModel? GetById(int id) 
+        {
+            
+            for(int i = 0; i < _estados.Count; i++)
+            {
+                if (_estados[i].Id == id)
+                {
+                    return _estados[i];
+                }
+                
+            }
+            return null;
+        }
     }
 }

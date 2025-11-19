@@ -21,6 +21,32 @@ function changeUFInformado() {
         }
     });
 }
+function toggleDescricao(e) {
+    $('#modalLoading').show();
+    $('#descricaoEstadoContainer').hide();
+
+    $.ajax({
+        url: urlRaiz + '/GetById',
+        type: 'GET',
+        data: { e: e },
+        success: function (data) {
+            $('#estadoNome').text(data.nome);
+            $('#estadoSigla').text(data.sigla);
+            $('#estadoDescricao').text(data.descricao);
+
+            $('#modalLoading').hide();
+            $('#descricaoEstadoContainer').show();
+        },
+        error: function () {
+            $('#modalLoading').text('Erro ao carregar os dados.');
+        }
+    });
+
+    $('#modalDescricaoCompartilhado').modal('show');
+
+
+
+}
 
 
 $("#siglaInput").on("change", function () {

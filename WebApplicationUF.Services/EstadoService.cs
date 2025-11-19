@@ -36,5 +36,9 @@ namespace WebAppUF.Application
         {
             return _repository.GetByRegion(regiao);
         }
+        public EstadoModel? GetById(int id)
+        {
+            return _repository.GetById(id);
+        }
     }
 }

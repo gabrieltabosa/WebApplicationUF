@@ -95,6 +95,12 @@ namespace WebUF.Services
             return await Deseralizador<bool>(response);
         }
 
+        public async Task<ApiResponse<EstadoViewModel>> GetByIdAsync(string id)
+        {
+            var response = await _httpClient.GetAsync($"api/Estado/{WebUtility.UrlEncode(id)}");
+            return await Deseralizador<EstadoViewModel>(response);
+        }
+
         public async Task<ApiResponse<List<EstadoViewModel>>> GetRegiaoAsync(string regiao)
         {
             var response = await _httpClient.GetAsync($"api/Estado/regiao/{WebUtility.UrlEncode(regiao)}");
