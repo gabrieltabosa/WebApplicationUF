@@ -7,8 +7,11 @@ using WebAppUF.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 // DI - serviços
-builder.Services.AddScoped<IEstadoRepository, EstadoRepository>();
+builder.Services.AddScoped<IEstadoRepository, EstadosRepositorioDbEntity>();
+
 builder.Services.AddScoped<IEstadoService, EstadoService>();
+// Certifique-se de que esta linha está presente:
+
 
 // Se a aplicação for majoritariamente API, prefira AddControllers()
 builder.Services.AddControllers(); // mais enxuto para APIs
@@ -16,9 +19,11 @@ builder.Services.AddControllers(); // mais enxuto para APIs
 // builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 
-//toda vez que o AppDbContext for requisitado, cria uma instância usando SQL Server
+// "DefaultConnection" é a chave que diz ao framework qual string buscar no appsettings.json
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer("Server=MEU_SERVIDOR;Database=MINHA_DB;Trusted_Connection=True;TrustServerCertificate=True;"));
+    options.UseSqlServer(connectionString));
 
 // Swagger / OpenAPI
 builder.Services.AddEndpointsApiExplorer();

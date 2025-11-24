@@ -1,4 +1,5 @@
-﻿using WebAppUF.Domain;
+﻿using InfrastructureUF;
+using WebAppUF.Domain;
 
 
 
@@ -9,6 +10,8 @@ namespace WebAppUF.Infrastructure
     {
         // Campo privado que guarda os estados em memória
         private readonly List<EstadoModel> _estados;
+
+        
         public EstadoRepository()
         {
             _estados = new List<EstadoModel>

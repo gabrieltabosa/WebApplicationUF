@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebApplicationUF.Core\DominioUF.csproj" />
+    <ProjectReference Include="..\WebApplicationUF.Repositories\InfrastructureUF.csproj" />
     <ProjectReference Include="..\WebApplicationUF.Services\ServicoUF.csproj" />
   </ItemGroup>
 
