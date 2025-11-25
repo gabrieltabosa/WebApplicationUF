@@ -30,9 +30,8 @@ function toggleDescricao(id) {
     // O modal em si é carregado dentro deste placeholder.
     const $placeholder = $("#modalPlaceholder");
 
-    // Se o botão ($btn) foi encontrado (length > 0), remove o foco dele.
-    // Isso evita que o botão permaneça com o estado de foco após ser clicado.
-    if ($btn.length) $btn.blur();
+   
+    
 
     // --- Tratamento do Botão e Carregamento (Loading) ---
 

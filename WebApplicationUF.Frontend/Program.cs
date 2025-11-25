@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Rewrite;
 using WebUF.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +9,7 @@ var apiBase = builder.Configuration["ApiSettings:BaseAddress"] ?? "https://local
 builder.Services.AddControllersWithViews();
 
 // HttpClient tipado
-builder.Services.AddHttpClient<EstadoApiClient>(client =>
+builder.Services.AddHttpClient<IEstadoApiClient, EstadoApiClient>(client =>
 {
     client.BaseAddress = new Uri(apiBase);
     client.Timeout = TimeSpan.FromSeconds(10);
@@ -17,7 +18,8 @@ builder.Services.AddHttpClient<EstadoApiClient>(client =>
 var app = builder.Build();
 
 
-app.UseHttpsRedirection();
+app.UseHttpsRedirection();// Redireciona HTTP para HTTPS
+app.UseHsts(); // Adiciona cabeçalhos de segurança (HTTP Strict Transport Security)
 app.UseStaticFiles();
 app.UseRouting();
 app.MapControllerRoute(

@@ -9,7 +9,7 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace WebUF.Services
 {
-    public class EstadoApiClient
+    public class EstadoApiClient: IEstadoApiClient
     {
         private readonly HttpClient _httpClient;
 

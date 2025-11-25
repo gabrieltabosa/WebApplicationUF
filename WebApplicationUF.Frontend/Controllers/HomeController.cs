@@ -7,9 +7,9 @@ namespace WebUF.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly EstadoApiClient _api;
+        private readonly IEstadoApiClient _api;
 
-        public HomeController(EstadoApiClient api)
+        public HomeController(IEstadoApiClient api)
         {
             _api = api;
         }
