@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Rewrite;
+using WebUF.Profiles;
 using WebUF.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 var apiBase = builder.Configuration["ApiSettings:BaseAddress"] ?? "https://localhost:7179/"; // ajuste
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<EstadoProfile>());
 
 // HttpClient tipado
 builder.Services.AddHttpClient<IEstadoApiClient, EstadoApiClient>(client =>

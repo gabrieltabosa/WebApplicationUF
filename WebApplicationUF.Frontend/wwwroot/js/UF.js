@@ -46,7 +46,7 @@ function toggleDescricao(id) {
         </div>
     `);
 
-    // --- Requisição AJAX ---
+    
 
     // Inicia a requisição AJAX usando o objeto jQuery $.ajax.
     $.ajax({

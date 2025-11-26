@@ -8,8 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // DI - serviços
 builder.Services.AddScoped<IEstadoRepository, EstadosRepositorioDbEntity>();
-builder.Services.AddScoped<IEstadoRepository, EstadoRepositoryDapper>();
-builder.Services.AddScoped<IEstadoRepository, EstadoRepository>();
+//builder.Services.AddScoped<IEstadoRepository, EstadoRepositoryDapper>();
+//builder.Services.AddScoped<IEstadoRepository, EstadoRepository>();
 builder.Services.AddScoped<IEstadoService, EstadoService>();
 // Certifique-se de que esta linha está presente:
 

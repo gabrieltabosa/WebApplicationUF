@@ -1,95 +1,101 @@
 ﻿using System.Net;
 using System.Text.Json;
+using AutoMapper;
 using WebUF.ViewModel;
-
-
-using System.Net.Http.Json;
-using System.Reflection.Metadata.Ecma335;
 
 
 namespace WebUF.Services
 {
-    public class EstadoApiClient: IEstadoApiClient
+    public class EstadoApiClient : IEstadoApiClient
     {
         private readonly HttpClient _httpClient;
+        private readonly IMapper _mapper;
 
-        public EstadoApiClient(HttpClient httpClient)
+        public EstadoApiClient(HttpClient httpClient, IMapper mapper)
         {
             _httpClient = httpClient;
+            _mapper = mapper;
             System.Diagnostics.Debug.WriteLine($"HttpClient Base Address: {_httpClient.BaseAddress}");
         }
 
-        // --------------------------------------------------------------------------
-        // NOVO: Deserializador Genérico
-        // Esta função encapsula a lógica de sucesso, erro e desserialização
-        // para qualquer tipo de dado (TData) retornado pela API.
-        // --------------------------------------------------------------------------
+        // Deserializador genérico para TData (TData aqui será EstadoDto, List<EstadoDto>, bool, etc.)
         private async Task<ApiResponse<TData>> Deseralizador<TData>(HttpResponseMessage response)
         {
-            // 1. Configuração do Serializador
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             string jsonContent = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Conteúdo JSON recebido: {jsonContent}");
 
-            // 2. Verifica se a operação foi bem-sucedida (Status Code 200-299)
             if (response.IsSuccessStatusCode)
             {
                 try
                 {
-                    if (typeof(TData) == typeof(List<EstadoViewModel>) && !jsonContent.StartsWith("["))
-                        jsonContent = "[" + jsonContent + "]";
-                    // Tenta desserializar o conteúdo diretamente para o tipo TData.
-                    // A lógica de forçar a lista/objeto singular (que estava no código original)
-                    // foi simplificada. Se a API retornar uma lista, TData deve ser List<EstadoViewModel>.
-                    // Se a API retornar um bool, TData deve ser bool.
+                    
+                    Console.WriteLine($"lista do estado: {jsonContent}");
                     var data = JsonSerializer.Deserialize<TData>(jsonContent, options);
-                    Console.WriteLine($"Conteúdo JSON desserializado: {jsonContent}");
-                    Console.WriteLine($"Tipo de dado esperado: {data}");
-                    // Retorna um ApiResponse de sucesso
+                    Console.WriteLine($"Desserialização bem-sucedida para {data}.");
                     return new ApiResponse<TData>(data);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Erro na desserialização: {ex.Message}");
-                    // Erro na desserialização do JSON (o JSON recebido não bate com TData)
                     return new ApiResponse<TData>(
                         $"Erro de Desserialização (Sucesso HTTP): O conteúdo JSON não pôde ser convertido para {typeof(TData).Name}. Conteúdo: {jsonContent}. Detalhe: {ex.Message}"
                     );
                 }
             }
-            else // Status Code de Erro (4xx ou 5xx)
+            else
             {
-                // Retorna um ApiResponse de erro
-                return new ApiResponse<TData>(
-                    $"Erro ({response.StatusCode}): {jsonContent}"
-                );
+                return new ApiResponse<TData>($"Erro ({response.StatusCode}): {jsonContent}");
             }
         }
 
+        // ---- Métodos públicos (desserializam para DTO e depois mapeiam para ViewModel) ----
 
         public async Task<ApiResponse<List<EstadoViewModel>>> GetAllAsync()
         {
             var response = await _httpClient.GetAsync("api/Estado");
-            return await Deseralizador<List<EstadoViewModel>>(response);
-        }
+            var dtoResp = await Deseralizador<List<EstadoDto>>(response);
+            Console.WriteLine("Response received from API.");
 
+            if (!dtoResp.Sucesso)
+                return new ApiResponse<List<EstadoViewModel>>(dtoResp.Erro);
+
+            var vmList = _mapper.Map<List<EstadoViewModel>>(dtoResp.Data);
+            
+            return new ApiResponse<List<EstadoViewModel>>(vmList);
+        }
 
         public async Task<ApiResponse<List<EstadoViewModel>>> GetBySiglaAsync(string sigla)
         {
-            var retorno = await _httpClient.GetAsync($"api/Estado/sigla/{WebUtility.UrlEncode(sigla)}");
-            return await Deseralizador<List<EstadoViewModel>>(retorno);
-        }
+            var response = await _httpClient.GetAsync($"api/Estado/sigla/{WebUtility.UrlEncode(sigla)}");
 
+            
+            var dtoRespSingle = await Deseralizador<EstadoDto>(response);
+
+            // Verifica a Falha 
+            if (!dtoRespSingle.Sucesso)
+            {
+                // Retorna o erro
+                return new ApiResponse<List<EstadoViewModel>>(dtoRespSingle.Erro);
+            }
+
+            
+            var vmList = new List<EstadoViewModel>();
+            if (dtoRespSingle.Data != null)
+            {
+                var singleVm = _mapper.Map<EstadoViewModel>(dtoRespSingle.Data);
+                vmList.Add(singleVm);
+            }
+
+            Console.WriteLine($"Lista de estado criada com {vmList.Count} item(s).");
+            return new ApiResponse<List<EstadoViewModel>>(vmList);
+        }
 
         public async Task<ApiResponse<bool>> EstadoExistsAsync(string sigla)
         {
             var response = await _httpClient.GetAsync($"api/Estado/exists/{WebUtility.UrlEncode(sigla)}");
-
             if (!response.IsSuccessStatusCode)
             {
-                return new ApiResponse<bool>
-                {
-                    Data = false
-                };
+                return new ApiResponse<bool> { Data = false };
             }
 
             return await Deseralizador<bool>(response);
@@ -98,15 +104,27 @@ namespace WebUF.Services
         public async Task<ApiResponse<EstadoViewModel>> GetByIdAsync(string id)
         {
             var response = await _httpClient.GetAsync($"api/Estado/{WebUtility.UrlEncode(id)}");
-            Console.WriteLine($"Response formato Code: {response}");
-            return await Deseralizador<EstadoViewModel>(response);
+            var dtoResp = await Deseralizador<EstadoDto>(response);
+
+            if (!dtoResp.Sucesso)
+                return new ApiResponse<EstadoViewModel>(dtoResp.Erro);
+
+            var vm = _mapper.Map<EstadoViewModel>(dtoResp.Data);
+            return new ApiResponse<EstadoViewModel>(vm);
         }
 
         public async Task<ApiResponse<List<EstadoViewModel>>> GetRegiaoAsync(string regiao)
         {
             var response = await _httpClient.GetAsync($"api/Estado/regiao/{WebUtility.UrlEncode(regiao)}");
-            return await Deseralizador<List<EstadoViewModel>>(response);
+            var dtoResp = await Deseralizador<List<EstadoDto>>(response);
+
+            if (!dtoResp.Sucesso)
+                return new ApiResponse<List<EstadoViewModel>>(dtoResp.Erro);
+
+            var vm = _mapper.Map<List<EstadoViewModel>>(dtoResp.Data);
+            return new ApiResponse<List<EstadoViewModel>>(vm);
         }
     }
 }
+
 

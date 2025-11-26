@@ -58,6 +58,7 @@ namespace WebApiUF.Controllers
             {
                 return NotFound();
             }
+            
             return Ok(estado);
         }
         [HttpGet("regiao/{regiao}")]

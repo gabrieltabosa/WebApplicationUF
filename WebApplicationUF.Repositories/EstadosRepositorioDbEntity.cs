@@ -34,7 +34,7 @@ namespace InfrastructureUF
         public bool EstadoExists(string sigla)
         {
             // O .Any() é otimizado para retornar true/false rapidamente.
-            return _context.Estados.Any(e => e.Sigla.Equals(sigla, StringComparison.OrdinalIgnoreCase));
+            return _context.Estados.Any(e => e.Sigla.ToUpper() == sigla.ToUpper());
         }
 
         
@@ -47,13 +47,13 @@ namespace InfrastructureUF
         
         public EstadoModel? GetBySigla(string sigla)
         {
-            return _context.Estados.FirstOrDefault(e => e.Sigla.Equals(sigla, StringComparison.OrdinalIgnoreCase));
+            return _context.Estados.FirstOrDefault(e => e.Sigla.ToUpper() == sigla.ToUpper());
         }
 
         
         public EstadoModel? GetByName(string nome)
         {
-            return _context.Estados.FirstOrDefault(e => e.Nome.Equals(nome, StringComparison.OrdinalIgnoreCase));
+            return _context.Estados.FirstOrDefault(e => e.Nome.ToUpper() == nome.ToUpper());
         }
 
         
@@ -61,7 +61,7 @@ namespace InfrastructureUF
         {
             // O .Where() aplica o filtro na query SQL.
             return _context.Estados
-                           .Where(e => e.Regiao.Equals(regiao, StringComparison.OrdinalIgnoreCase))
+                           .Where(e => e.Regiao.ToUpper() == regiao.ToUpper())
                            .ToList();
         }
     }
